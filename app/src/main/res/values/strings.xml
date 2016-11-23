@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Carpooling</string>
+    <string name="app_description">Bienvenidos</string>
+    <string name="seach_trip_action">Search best deal</string>
+    <string name="accept_text">Accept</string>
+    <string name="cancel_text">Cancel</string>
+    <string name="empty_to_location">Arrival location is required</string>
+    <string name="empty_from_location">Departure location is required</string>
+    <string name="empty_arrival_time">Arrival time is required</string>
+    <string name="empty_Departure_time">Departure time is required</string>
 </resources>
