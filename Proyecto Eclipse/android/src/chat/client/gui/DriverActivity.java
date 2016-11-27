@@ -1,26 +1,3 @@
-/*****************************************************************
-JADE - Java Agent DEvelopment Framework is a framework to develop 
-multi-agent systems in compliance with the FIPA specifications.
-Copyright (C) 2000 CSELT S.p.A. 
-
-GNU Lesser General Public License
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation, 
-version 2.1 of the License. 
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the
-Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA  02111-1307, USA.
- *****************************************************************/
-
 package chat.client.gui;
 
 import java.util.logging.Level;
@@ -47,24 +24,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import chat.client.agent.CarInterface;
 import chat.client.agent.ChatClientInterface;
 import chat.client.agent.PassengerInterface;
 
 /**
  * This activity implement the chat interface.
  * 
- * @author Michele Izzo - Telecomitalia
+ * @authors
  */
 
-public class ChatActivity extends Activity {
+public class DriverActivity extends Activity {
 	private Logger logger = Logger.getJADELogger(this.getClass().getName());
 
 	static final int PARTICIPANTS_REQUEST = 0;
 
-	private MyReceiver myReceiver;
 
 	private String nickname;
-	private PassengerInterface passengerInterface;
+	private CarInterface carInterface;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,25 +53,16 @@ public class ChatActivity extends Activity {
 		}
 
 		try {
-			passengerInterface = MicroRuntime.getAgent(nickname)
-					.getO2AInterface(PassengerInterface.class);
+			carInterface = MicroRuntime.getAgent(nickname)
+					.getO2AInterface(CarInterface.class);
 		} catch (StaleProxyException e) {
 			showAlertDialog(getString(R.string.msg_interface_exc), true);
 		} catch (ControllerException e) {
 			showAlertDialog(getString(R.string.msg_controller_exc), true);
 		}
 
-		myReceiver = new MyReceiver();
 
-		IntentFilter refreshChatFilter = new IntentFilter();
-		refreshChatFilter.addAction("jade.demo.chat.REFRESH_CHAT");
-		registerReceiver(myReceiver, refreshChatFilter);
-
-		IntentFilter clearChatFilter = new IntentFilter();
-		clearChatFilter.addAction("jade.demo.chat.CLEAR_CHAT");
-		registerReceiver(myReceiver, clearChatFilter);
-
-		setContentView(R.layout.chat);
+		setContentView(R.layout.driver);
 
 		Button button = (Button) findViewById(R.id.button_send);
 		button.setOnClickListener(buttonSendListener);
@@ -103,27 +71,17 @@ public class ChatActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
-		unregisterReceiver(myReceiver);
-
 		logger.log(Level.INFO, "Destroy activity!");
 	}
 
 	private OnClickListener buttonSendListener = new OnClickListener() {
 		public void onClick(View v) {
 			EditText destinyField =  (EditText) findViewById(R.id.editDestiny);
-			String destiny = destinyField.getText().toString();
-			EditText originField =  (EditText) findViewById(R.id.editOrigin);
-			String origin = originField.getText().toString();
-			EditText arrivalField =  (EditText) findViewById(R.id.editArrival);
-			String arrival = arrivalField.getText().toString();
-			if (destiny != null && !destiny.equals("")) {
+			String message = destinyField.getText().toString();
+			if (message != null && !message.equals("")) {
 				try {
-					 if(null == passengerInterface) {
-						 
-					 }
-					passengerInterface.askForRide(origin,destiny,arrival);
-				} catch (Exception e) {
+					carInterface.addRide("Alajuela","Coronado","11:00","12:00",2, 1500);
+				} catch (O2AException e) {
 					showAlertDialog(e.getMessage(), false);
 				}
 			}
@@ -156,15 +114,6 @@ public class ChatActivity extends Activity {
 		}
 	}
 
-	private class MyReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			logger.log(Level.INFO, "Received intent " + action);
-		}
-	}
-
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -178,7 +127,7 @@ public class ChatActivity extends Activity {
 
 	private void showAlertDialog(String message, final boolean fatal) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(
-				ChatActivity.this);
+				DriverActivity.this);
 		builder.setMessage(message)
 				.setCancelable(false)
 				.setPositiveButton("Ok",

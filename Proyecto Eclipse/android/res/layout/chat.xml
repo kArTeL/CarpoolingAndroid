@@ -1,25 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_height="fill_parent"
-	android:layout_width="fill_parent">
-	<ScrollView android:layout_marginBottom="50dip" android:id="@+id/scroller"
-		android:layout_height="fill_parent" android:layout_width="fill_parent">
-		<TextView android:id="@+id/chatTextView"
-			android:paddingBottom="8dip" android:layout_width="fill_parent"
-			android:layout_height="fill_parent" />
-	</ScrollView>
-	<RelativeLayout android:layout_marginTop="-50dip"
-		android:gravity="bottom" android:layout_height="wrap_content"
-		android:layout_width="fill_parent">
-		<Button android:text="@string/button_send" android:id="@+id/button_send"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:layout_alignParentBottom="true"
-			android:layout_alignParentRight="true">
-		</Button>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_height="fill_parent"
+    android:layout_width="fill_parent">
 
-		<EditText android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:layout_toLeftOf="@id/button_send"
-			android:layout_alignParentBottom="true" android:id="@+id/edit_message">
-		</EditText>
-	</RelativeLayout>
-</LinearLayout>
+    <TextView android:id="@+id/originTextView"
+            android:paddingBottom="8dip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lugar de origen"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editOrigin"
+        android:inputType="text"
+        android:layout_below="@+id/originTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/originTextView"
+        android:layout_alignEnd="@+id/originTextView">
+    </EditText>
+
+    <TextView
+        android:id="@+id/textViewDestino"
+        android:paddingBottom="8dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lugar de destino"
+        android:layout_alignBaseline="@+id/originTextView"
+        android:layout_toRightOf="@+id/originTextView"
+        android:layout_marginLeft="50dp"
+        />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editDestiny"
+        android:inputType="text"
+        android:layout_below="@+id/textViewDestino"
+        android:layout_alignBaseline="@+id/editOrigin"
+        android:layout_toRightOf="@+id/editOrigin"
+        android:layout_marginLeft="50dp"
+        android:layout_alignRight="@+id/textViewDestino"
+        android:layout_alignEnd="@+id/textViewDestino" />
+
+    <TextView android:id="@+id/arrivalTimeTextView"
+        android:paddingBottom="8dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hora de llegada"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/editOrigin"
+        android:layout_marginTop="25dp"
+         />
+
+    <EditText android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editArrival"
+        android:inputType="text"
+        android:layout_below="@+id/arrivalTimeTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/arrivalTimeTextView"
+        android:layout_alignEnd="@+id/arrivalTimeTextView">
+    </EditText>
+
+
+    <Button
+        android:text="@string/button_send"
+        android:id="@+id/button_send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editArrival"
+        android:layout_marginTop="25dp"
+        >
+    </Button>
+
+</RelativeLayout>

@@ -23,6 +23,8 @@ public class PassengerAgent extends Agent implements PassengerInterface  {
 	private String _origin, _destiny, _departTime, _arrivalTime;
 	// The list of known car agents
 	private AID[] sellerAgents;
+	
+	private Behaviour tickerBehaviour;
     
 	private Context context;
 	
@@ -59,34 +61,36 @@ public class PassengerAgent extends Agent implements PassengerInterface  {
     public void askForRide(final String origin, final String destiny,
                                     final String arrivalTime) {
     	System.out.println("Pidiendo ride bitches. La buter si funko");
-    	addBehaviour(new TickerBehaviour(this, 6000) {
-                    protected void onTick() {
-                        _origin = origin;
-                        _arrivalTime = arrivalTime;
-                        _destiny = destiny;
-                        System.out.println("[" +getAID().getName()+ "]: Intentando apartar campo para " + _destiny+"("+_arrivalTime+")");
-                        // Update the list of car agents
-                        DFAgentDescription template = new DFAgentDescription();
-                        ServiceDescription sd = new ServiceDescription();
-                        sd.setType("car-pooling");
-                        template.addServices(sd);
-                        try {
-                                DFAgentDescription[] result = DFService.search(myAgent, template); 
-                                System.out.println("[" +getAID().getName()+ "]: Se encontraron los siguientes carros disponibles:");
-                                sellerAgents = new AID[result.length];
-                                for (int i = 0; i < result.length; ++i) {
-                                        sellerAgents[i] = result[i].getName();
-                                        System.out.println(sellerAgents[i].getName());
-                                }
+    	tickerBehaviour = new TickerBehaviour(this, 6000){
+    		protected void onTick() {
+                _origin = origin;
+                _arrivalTime = arrivalTime;
+                _destiny = destiny;
+                System.out.println("[" +getAID().getName()+ "]: Intentando apartar campo para " + _destiny+"("+_arrivalTime+")");
+                // Update the list of car agents
+                DFAgentDescription template = new DFAgentDescription();
+                ServiceDescription sd = new ServiceDescription();
+                sd.setType("car-pooling");
+                template.addServices(sd);
+                try {
+                        DFAgentDescription[] result = DFService.search(myAgent, template); 
+                        System.out.println("[" +getAID().getName()+ "]: Se encontraron los siguientes carros disponibles:");
+                        sellerAgents = new AID[result.length];
+                        for (int i = 0; i < result.length; ++i) {
+                                sellerAgents[i] = result[i].getName();
+                                System.out.println(sellerAgents[i].getName());
                         }
-                        catch (FIPAException fe) {
-                                fe.printStackTrace();
-                        }
+                }
+                catch (FIPAException fe) {
+                        fe.printStackTrace();
+                }
 
-                        // Perform the request
-                        myAgent.addBehaviour(new RequestPerformer());
-                    }
-                } );
+                // Perform the request
+                myAgent.addBehaviour(new RequestPerformer());
+            }
+    	};
+    	
+    	addBehaviour(tickerBehaviour);
 	}
 
 	/**
@@ -168,7 +172,7 @@ public class PassengerAgent extends Agent implements PassengerInterface  {
                                     // Reservation successful. We can terminate
                                     System.out.println("[" +getAID().getName()+ "]: Campo reservado en carro: "+reply.getSender().getName());
                                     System.out.println("[" +getAID().getName()+ "]: Ruta "+ _origin+"("+_departTime+") -> "+_destiny+", Precio = $"+bestPrice);
-                                    myAgent.doDelete();
+                                    myAgent.removeBehaviour(tickerBehaviour);
                             }
                             else {
                                     System.out.println("[" +getAID().getName()+ "]: Fallo: El viaje encontrado no contiene campos.");

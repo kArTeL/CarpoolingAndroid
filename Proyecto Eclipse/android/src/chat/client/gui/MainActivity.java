@@ -25,6 +25,7 @@ package chat.client.gui;
 
 import java.util.logging.Level;
 
+import chat.client.agent.CarAgent;
 import chat.client.agent.ChatClientAgent;
 import chat.client.agent.PassengerAgent;
 import jade.android.AndroidHelper;
@@ -58,12 +59,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 /**
  * This activity implement the main interface.
  * 
- * @author Michele Izzo - Telecomitalia
+ * @author 
  */
 
 public class MainActivity extends Activity {
@@ -77,7 +80,9 @@ public class MainActivity extends Activity {
 
 	private MyReceiver myReceiver;
 	private MyHandler myHandler;
-
+	
+	private RadioButton passenger;
+	private RadioButton driver;
 	private TextView infoTextView;
 
 	private String nickname;
@@ -89,7 +94,7 @@ public class MainActivity extends Activity {
 		myReceiver = new MyReceiver();
 
 		IntentFilter killFilter = new IntentFilter();
-		killFilter.addAction("jade.demo.chat.KILL");
+		killFilter.addAction("jade.demo.carpool.SHOW_DRIVER");
 		registerReceiver(myReceiver, killFilter);
 
 		IntentFilter showChatFilter = new IntentFilter();
@@ -105,6 +110,17 @@ public class MainActivity extends Activity {
 
 		infoTextView = (TextView) findViewById(R.id.infoTextView);
 		infoTextView.setText("");
+		
+		passenger = (RadioButton) findViewById(R.id.radioButtonPassenger);
+		driver = (RadioButton) findViewById(R.id.radioButtonConductor);
+		
+		/*RadioGroup rg = new RadioGroup(this);
+		passenger = (RadioButton) findViewById(R.id.radioButtonPassenger);
+		rg.addView(passenger);
+		
+		driver = (RadioButton) findViewById(R.id.radioButtonConductor);
+		rg.addView(driver);*/
+		
 	}
 
 	@Override
@@ -140,6 +156,7 @@ public class MainActivity extends Activity {
 					String port = settings.getString("defaultPort", "");
 					infoTextView.setText(getString(R.string.msg_connecting_to)
 							+ " " + host + ":" + port + "...");
+
 					startChat(nickname, host, port, agentStartupCallback);
 				} catch (Exception ex) {
 					logger.log(Level.SEVERE, "Unexpected exception creating chat agent!");
@@ -227,13 +244,18 @@ public class MainActivity extends Activity {
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			logger.log(Level.INFO, "Received intent " + action);
-			if (action.equalsIgnoreCase("jade.demo.chat.KILL")) {
-				finish();
-			}
 			if (action.equalsIgnoreCase("jade.demo.chat.SHOW_CHAT")) {
 				Intent showChat = new Intent(MainActivity.this,
 						ChatActivity.class);
 				showChat.putExtra("nickname", nickname);
+				MainActivity.this
+						.startActivityForResult(showChat, CHAT_REQUEST);
+			}
+			if (action.equalsIgnoreCase("jade.demo.carpool.SHOW_DRIVER")) {
+				Intent showChat = new Intent(MainActivity.this,
+						DriverActivity.class);
+				showChat.putExtra("nickname", nickname);
+				logger.log(Level.INFO, "About to start activity");
 				MainActivity.this
 						.startActivityForResult(showChat, CHAT_REQUEST);
 			}
@@ -312,7 +334,13 @@ public class MainActivity extends Activity {
 						@Override
 						public void onSuccess(Void thisIsNull) {
 							logger.log(Level.INFO, "Successfully start of the container...");
-							startAgent(nickname, agentStartupCallback);
+							if(passenger.isChecked()) {
+								startPassengerAgent(nickname, agentStartupCallback);
+							} else {
+								if(driver.isChecked()) {
+								 startCarAgent(nickname, agentStartupCallback);
+								}
+							}
 						}
 
 						@Override
@@ -321,11 +349,17 @@ public class MainActivity extends Activity {
 						}
 					});
 		} else {
-			startAgent(nickname, agentStartupCallback);
+			if(passenger.isChecked()) {
+				startPassengerAgent(nickname, agentStartupCallback);
+			} else {
+				if(driver.isChecked()) {
+					startCarAgent(nickname, agentStartupCallback);
+				}
+			}
 		}
 	}
 
-	private void startAgent(final String nickname,
+	private void startPassengerAgent(final String nickname,
 			final RuntimeCallback<AgentController> agentStartupCallback) {
 		microRuntimeServiceBinder.startAgent(nickname,
 				PassengerAgent.class.getName(),
@@ -333,15 +367,20 @@ public class MainActivity extends Activity {
 				new RuntimeCallback<Void>() {
 					@Override
 					public void onSuccess(Void thisIsNull) {
-						logger.log(Level.INFO, "Successfully start of the "
-								+ PassengerAgent.class.getName() + "...");
-						try {
-							agentStartupCallback.onSuccess(MicroRuntime
-									.getAgent(nickname));
-						} catch (ControllerException e) {
-							// Should never happen
-							agentStartupCallback.onFailure(e);
+						if(passenger.isChecked()) {
+							logger.log(Level.INFO, "Successfully start of the "
+									+ PassengerAgent.class.getName() + "...");
+							try {
+								agentStartupCallback.onSuccess(MicroRuntime
+										.getAgent(nickname));
+							} catch (ControllerException e) {
+								// Should never happen
+								agentStartupCallback.onFailure(e);
+							}
+						} else {
+							
 						}
+						
 					}
 
 					@Override
@@ -352,5 +391,58 @@ public class MainActivity extends Activity {
 					}
 				});
 	}
+	
+	private void startCarAgent(final String nickname,
+			final RuntimeCallback<AgentController> agentStartupCallback) {
+		microRuntimeServiceBinder.startAgent(nickname,
+				CarAgent.class.getName(),
+				new Object[] { getApplicationContext() },
+				new RuntimeCallback<Void>() {
+					@Override
+					public void onSuccess(Void thisIsNull) {
+						if(passenger.isChecked()) {
+							logger.log(Level.INFO, "Successfully start of the "
+									+ CarAgent.class.getName() + "...");
+							try {
+								agentStartupCallback.onSuccess(MicroRuntime
+										.getAgent(nickname));
+							} catch (ControllerException e) {
+								// Should never happen
+								agentStartupCallback.onFailure(e);
+							}
+						} else {
+							
+						}
+						
+					}
 
+					@Override
+					public void onFailure(Throwable throwable) {
+						logger.log(Level.SEVERE, "Failed to start the "
+								+ CarAgent.class.getName() + "...");
+						agentStartupCallback.onFailure(throwable);
+					}
+				});
+	}
+
+	@Override
+	protected void onPause(){
+		super.onPause();
+
+		unregisterReceiver(myReceiver);
+
+	}
+	
+	@Override
+	protected void onResume(){
+		super.onResume();
+		
+		IntentFilter killFilter = new IntentFilter();
+		killFilter.addAction("jade.demo.carpool.SHOW_DRIVER");
+		registerReceiver(myReceiver, killFilter);
+
+		IntentFilter showChatFilter = new IntentFilter();
+		showChatFilter.addAction("jade.demo.chat.SHOW_CHAT");
+		registerReceiver(myReceiver, showChatFilter);
+	}
 }

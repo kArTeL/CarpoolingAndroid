@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_height="fill_parent"
+    android:layout_width="fill_parent">
+
+    <TextView android:id="@+id/originTextView"
+            android:paddingBottom="8dip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lugar de origen"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editOrigin"
+        android:inputType="text"
+        android:layout_below="@+id/originTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/originTextView"
+        android:layout_alignEnd="@+id/originTextView">
+    </EditText>
+
+    <TextView
+        android:id="@+id/textViewDestino"
+        android:paddingBottom="8dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lugar de destino"
+        android:layout_alignBaseline="@+id/originTextView"
+        android:layout_toRightOf="@+id/originTextView"
+        android:layout_marginLeft="50dp"
+        />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editDestiny"
+        android:inputType="text"
+        android:layout_below="@+id/textViewDestino"
+        android:layout_alignBaseline="@+id/editOrigin"
+        android:layout_toRightOf="@+id/editOrigin"
+        android:layout_marginLeft="50dp"
+        android:layout_alignRight="@+id/textViewDestino"
+        android:layout_alignEnd="@+id/textViewDestino" />
+
+    <TextView android:id="@+id/departTimeTextView"
+        android:paddingBottom="8dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hora de salida"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/editOrigin"
+        android:layout_marginTop="25dp"
+         />
+
+    <EditText android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editDeparture"
+        android:inputType="text"
+        android:layout_below="@+id/departTimeTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/departTimeTextView"
+        android:layout_alignEnd="@+id/departTimeTextView">
+    </EditText>
+
+    <TextView
+        android:id="@+id/arrivalTimetextView"
+        android:paddingBottom="8dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hora de llegada"
+        android:layout_below="@+id/editDestiny"
+        android:layout_alignBaseline="@+id/departTimeTextView"
+        android:layout_toRightOf="@+id/departTimeTextView"
+        android:layout_marginLeft="50dp"
+        />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editArrival"
+        android:inputType="text"
+        android:layout_below="@+id/arrivalTimetextView"
+        android:layout_alignBaseline="@+id/editDeparture"
+        android:layout_toRightOf="@+id/editDeparture"
+        android:layout_marginLeft="50dp"
+        android:layout_alignRight="@+id/arrivalTimetextView"
+        android:layout_alignEnd="@+id/arrivalTimetextView" />
+
+    <TextView android:id="@+id/freeSeatsTextView"
+        android:paddingBottom="8dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Asientos libres:"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/editDeparture"
+        android:layout_marginTop="25dp"
+        />
+
+    <EditText android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editFreeSeats"
+        android:inputType="text"
+        android:layout_below="@+id/freeSeatsTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/freeSeatsTextView"
+        android:layout_alignEnd="@+id/freeSeatsTextView">
+    </EditText>
+
+    <Button
+        android:text="@string/button_add_ride"
+        android:id="@+id/button_send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editFreeSeats"
+        android:layout_marginTop="25dp"
+        >
+    </Button>
+
+</RelativeLayout>

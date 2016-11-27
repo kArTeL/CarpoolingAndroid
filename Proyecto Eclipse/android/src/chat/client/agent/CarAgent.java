@@ -5,21 +5,34 @@ import jade.core.Agent;
 import jade.core.behaviours.*;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.util.Logger;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 import java.util.*;
+import java.util.logging.Level;
 
-public class CarAgent extends Agent {
+import android.content.Context;
+import android.content.Intent;
+
+public class CarAgent extends Agent implements CarInterface {
+	private Logger logger = Logger.getJADELogger(this.getClass().getName());
 	// The rides a car agent is offering
 	private Map rides;
 	// The GUI by means of which the user can add rides
+	private Context context;
 
 	// Put agent initializations here
         @Override
 	protected void setup() {
+        	Object[] args = getArguments();
+    		if (args != null && args.length > 0) {
+    			if (args[0] instanceof Context) {
+    				context = (Context) args[0];
+    			}
+    		}
             // Create the catalogue
             rides = new HashMap<String, Ride>(); //Destiny, ride info
 
@@ -44,6 +57,11 @@ public class CarAgent extends Agent {
 
             // Add the behaviour serving seat resevations from passenger agents
             addBehaviour(new PurchaseOrdersServer());
+            
+            Intent broadcast = new Intent();
+    		broadcast.setAction("jade.demo.carpool.SHOW_DRIVER");
+    		logger.log(Level.INFO, "Sending broadcast " + broadcast.getAction());
+    		context.sendBroadcast(broadcast);
 	}
 
 	// Put agent clean-up operations here
@@ -64,7 +82,7 @@ public class CarAgent extends Agent {
      This is invoked by the GUI when the user adds a new offered ride
      * @param arrivalTime
 	 */
-	public void updateCatalogue(final String origin, final String destiny, final String departureTime ,
+	public void addRide(final String origin, final String destiny, final String departureTime ,
                                     final String arrivalTime, final int freeSeats, final int price) {
             addBehaviour(new OneShotBehaviour() {
                 public void action() {
