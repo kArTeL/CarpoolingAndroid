@@ -4,7 +4,8 @@
     <string name="app_title_main">CarPooling APP</string>
     <string name="app_title_settings">CarPooling Settings</string>    
     <string name="app_title_chat">Conductor</string>    
-    <string name="app_title_participants">Pasajero</string>    
+    <string name="app_title_participants">Pasajero</string> 
+    <string name="app_title_driver">Conductor</string>   
 
     <string name="label_nick">Ingresar nombre de usuario</string>
     <string name="label_host">Host</string>

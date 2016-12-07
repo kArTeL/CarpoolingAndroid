@@ -1,4 +1,4 @@
-package chat.client.agent;
+package carpooling.agent;
 
 public interface CarInterface {
 		public void addRide(final String origin, final String destiny, final String departureTime ,

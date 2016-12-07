@@ -21,7 +21,7 @@ Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
  *****************************************************************/
 
-package chat.client.gui;
+package carpooling.gui;
 
 import java.util.logging.Level;
 
@@ -47,8 +47,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import chat.client.agent.ChatClientInterface;
-import chat.client.agent.PassengerInterface;
+import carpooling.agent.ChatClientInterface;
+import carpooling.agent.PassengerInterface;
+import chat.client.gui.R;
 
 /**
  * This activity implement the chat interface.

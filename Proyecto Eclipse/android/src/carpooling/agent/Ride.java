@@ -1,7 +1,7 @@
 
 
 
-package chat.client.agent;
+package carpooling.agent;
 
 import java.util.Calendar;
 

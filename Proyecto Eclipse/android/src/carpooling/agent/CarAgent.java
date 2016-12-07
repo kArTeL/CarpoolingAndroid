@@ -1,5 +1,5 @@
 
-package chat.client.agent;
+package carpooling.agent;
 
 import jade.core.Agent;
 import jade.core.behaviours.*;
@@ -51,6 +51,8 @@ public class CarAgent extends Agent implements CarInterface {
             catch (FIPAException fe) {
                     fe.printStackTrace();
             }
+            
+            
 
             // Add the behaviour serving queries from passenger agents
             addBehaviour(new OfferRequestsServer());
@@ -62,6 +64,7 @@ public class CarAgent extends Agent implements CarInterface {
     		broadcast.setAction("jade.demo.carpool.SHOW_DRIVER");
     		logger.log(Level.INFO, "Sending broadcast " + broadcast.getAction());
     		context.sendBroadcast(broadcast);
+    		registerO2AInterface(CarInterface.class, this);
 	}
 
 	// Put agent clean-up operations here

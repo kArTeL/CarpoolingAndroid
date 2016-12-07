@@ -1,9 +1,10 @@
-package chat.client.gui;
+package carpooling.gui;
 
 import java.util.logging.Level;
 
 import jade.core.MicroRuntime;
 import jade.util.Logger;
+import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.O2AException;
 import jade.wrapper.StaleProxyException;
@@ -24,9 +25,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import chat.client.agent.CarInterface;
-import chat.client.agent.ChatClientInterface;
-import chat.client.agent.PassengerInterface;
+import carpooling.agent.CarInterface;
+import carpooling.agent.ChatClientInterface;
+import carpooling.agent.PassengerInterface;
+import chat.client.gui.R;
 
 /**
  * This activity implement the chat interface.
@@ -55,6 +57,12 @@ public class DriverActivity extends Activity {
 		try {
 			carInterface = MicroRuntime.getAgent(nickname)
 					.getO2AInterface(CarInterface.class);
+			if (carInterface == null)
+			{
+				AgentController controller = MicroRuntime.getAgent(nickname);
+				logger.println("skljfsf");
+				
+			}
 		} catch (StaleProxyException e) {
 			showAlertDialog(getString(R.string.msg_interface_exc), true);
 		} catch (ControllerException e) {
@@ -76,15 +84,17 @@ public class DriverActivity extends Activity {
 
 	private OnClickListener buttonSendListener = new OnClickListener() {
 		public void onClick(View v) {
-			EditText destinyField =  (EditText) findViewById(R.id.editDestiny);
-			String message = destinyField.getText().toString();
-			if (message != null && !message.equals("")) {
-				try {
-					carInterface.addRide("Alajuela","Coronado","11:00","12:00",2, 1500);
-				} catch (O2AException e) {
-					showAlertDialog(e.getMessage(), false);
-				}
+			try {
+				carInterface.addRide("Alajuela","Coronado","11:00","12:00",2, 1500);
+			} catch (O2AException e) {
+				showAlertDialog(e.getMessage(), false);
 			}
+			
+//			EditText destinyField =  (EditText) findViewById(R.id.editDestiny);
+//			String message = destinyField.getText().toString();
+//			if (message != null && !message.equals("")) {
+//				
+//			}
 
 		}
 	};
