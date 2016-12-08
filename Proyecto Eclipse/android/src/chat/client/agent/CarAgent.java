@@ -14,6 +14,7 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import java.util.*;
 import java.util.logging.Level;
 
+import chat.client.gui.CarResponse;
 import android.content.Context;
 import android.content.Intent;
 
@@ -22,15 +23,15 @@ public class CarAgent extends Agent implements CarInterface {
 	// The rides a car agent is offering
 	private Map rides;
 	// The GUI by means of which the user can add rides
-	private Context context;
-
+	
+	private CarResponse _delegate;
 	// Put agent initializations here
         @Override
 	protected void setup() {
         	Object[] args = getArguments();
     		if (args != null && args.length > 0) {
-    			if (args[0] instanceof Context) {
-    				context = (Context) args[0];
+    			if (args[0] instanceof CarResponse) {
+    				_delegate = (CarResponse) args[0];
     			}
     		}
             // Create the catalogue
@@ -58,10 +59,7 @@ public class CarAgent extends Agent implements CarInterface {
             // Add the behaviour serving seat resevations from passenger agents
             addBehaviour(new PurchaseOrdersServer());
             
-            Intent broadcast = new Intent();
-    		broadcast.setAction("jade.demo.carpool.SHOW_DRIVER");
-    		logger.log(Level.INFO, "Sending broadcast " + broadcast.getAction());
-    		context.sendBroadcast(broadcast);
+            _delegate.onCarStart();
 	}
 
 	// Put agent clean-up operations here
@@ -78,6 +76,9 @@ public class CarAgent extends Agent implements CarInterface {
 		System.out.println("Car-agent "+getAID().getName()+" terminating.");
 	}
 
+	public void setDelegate(CarResponse newDelegate) {
+		_delegate = newDelegate;
+	}
 	/**
      This is invoked by the GUI when the user adds a new offered ride
      * @param arrivalTime
@@ -89,6 +90,7 @@ public class CarAgent extends Agent implements CarInterface {
                         rides.put(destiny, new Ride(origin, destiny, departureTime, arrivalTime, freeSeats, price));
                         System.out.println("[" +getAID().getName()+ "]: Nuevo viaje agreado: " + origin + "("+departureTime+") -> " + destiny + "("+arrivalTime+"),"+" precio: $" + price + ". Campos libres:");
                         System.out.println("Campos libres:" + freeSeats);
+                        _delegate.onUpdateRides("Nuevo viaje agreado: " + origin + "("+departureTime+") -> " + destiny + "("+arrivalTime+"),"+"\nPrecio: CRC" + price + ". Campos libres: " + freeSeats);
                 }      
             } );
 	}
@@ -153,6 +155,7 @@ public class CarAgent extends Agent implements CarInterface {
                                     rides.put(ride.destiny, ride);
                                     reply.setPerformative(ACLMessage.INFORM);
                                     System.out.println("[" +getAID().getName()+ "]: Campo en el viaje " + ride.origin + "("+ride.getDepartTime()+") -> " + ride.destiny + "("+ride.getArrivalTime()+") reservado para " + msg.getSender().getName());
+                                    _delegate.onCarResponse("Campo en el viaje:\n" + ride.origin + "("+ride.getDepartTime()+") -> " + ride.destiny + "("+ride.getArrivalTime()+")\nReservado para " + msg.getSender().getName());
 				}
 				else {
 					// The seat has been taken by other passenger in the meanwhile .

@@ -4,6 +4,8 @@ package chat.client.agent;
 
 import java.util.logging.Level;
 
+import chat.client.gui.CarResponse;
+import chat.client.gui.PassangerResponse;
 import android.content.Context;
 import android.content.Intent;
 import jade.core.Agent;
@@ -28,13 +30,15 @@ public class PassengerAgent extends Agent implements PassengerInterface  {
     
 	private Context context;
 	
+	private PassangerResponse _delegate;
+	
 	
 	// Put agent initializations here
 	protected void setup() {
 		Object[] args = getArguments();
 		if (args != null && args.length > 0) {
-			if (args[0] instanceof Context) {
-				context = (Context) args[0];
+			if (args[0] instanceof PassangerResponse) {
+				_delegate = (PassangerResponse) args[0];
 			}
 		}
 		// Printout a welcome message
@@ -43,15 +47,20 @@ public class PassengerAgent extends Agent implements PassengerInterface  {
         
         registerO2AInterface(PassengerInterface.class, this);
 		
-		Intent broadcast = new Intent();
+		/*Intent broadcast = new Intent();
 		broadcast.setAction("jade.demo.chat.SHOW_CHAT");
 		logger.log(Level.INFO, "Sending broadcast " + broadcast.getAction());
-		context.sendBroadcast(broadcast);
+		context.sendBroadcast(broadcast);*/
+        _delegate.onPassengerStart();
         
 
         // Get the title of the book to buy as a start-up argument            
 	}
 
+	public void setDelegate(PassangerResponse newDelegate) {
+		_delegate = newDelegate;
+	}
+	
 	// Put agent clean-up operations here
 	protected void takeDown() {
 		// Printout a dismissal message
@@ -171,10 +180,13 @@ public class PassengerAgent extends Agent implements PassengerInterface  {
                             if (reply.getPerformative() == ACLMessage.INFORM) {
                                     // Reservation successful. We can terminate
                                     System.out.println("[" +getAID().getName()+ "]: Campo reservado en carro: "+reply.getSender().getName());
-                                    System.out.println("[" +getAID().getName()+ "]: Ruta "+ _origin+"("+_departTime+") -> "+_destiny+", Precio = $"+bestPrice);
+                                    System.out.println("[" +getAID().getName()+ "]: Ruta: "+ _origin+"("+_departTime+") -> "+_destiny+", Precio = $"+bestPrice);
+                                    _delegate.onPassengerResponse("Campo reservado en carro: " + reply.getSender().getName() + "\nRuta: "
+                                    								+ _origin+"("+_departTime+") -> "+_destiny+", Precio = $"+bestPrice);
                                     myAgent.removeBehaviour(tickerBehaviour);
                             }
                             else {
+                            	_delegate.onPassengerResponse("Fallo: El viaje encontrado no contiene campos.");
                                     System.out.println("[" +getAID().getName()+ "]: Fallo: El viaje encontrado no contiene campos.");
                             }
 
@@ -189,6 +201,7 @@ public class PassengerAgent extends Agent implements PassengerInterface  {
 
             public boolean done() {
                 if (step == 2 && bestSeller == null) {
+	                	_delegate.onPassengerResponse("Fallo: No hay viajes para el destino dado.");
                         System.out.println("[" +getAID().getName()+ "]: Fallo: No hay viajes para el destino dado.");
                 }
                 return ((step == 2 && bestSeller == null) || step == 4);

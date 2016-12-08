@@ -34,7 +34,7 @@ import chat.client.agent.PassengerInterface;
  * @authors
  */
 
-public class DriverActivity extends Activity {
+public class DriverActivity extends Activity implements CarResponse {
 	private Logger logger = Logger.getJADELogger(this.getClass().getName());
 
 	static final int PARTICIPANTS_REQUEST = 0;
@@ -61,6 +61,7 @@ public class DriverActivity extends Activity {
 			showAlertDialog(getString(R.string.msg_controller_exc), true);
 		}
 
+		carInterface.setDelegate(this);
 
 		setContentView(R.layout.driver);
 
@@ -80,7 +81,7 @@ public class DriverActivity extends Activity {
 			String message = destinyField.getText().toString();
 			if (message != null && !message.equals("")) {
 				try {
-					carInterface.addRide("Alajuela","Coronado","11:00","12:00",2, 1500);
+					carInterface.addRide("UCR","Coronado","20:00","21:00",2, 1500);
 				} catch (O2AException e) {
 					showAlertDialog(e.getMessage(), false);
 				}
@@ -140,5 +141,34 @@ public class DriverActivity extends Activity {
 						});
 		AlertDialog alert = builder.create();
 		alert.show();		
+	}
+	
+	public void ShowDialog(String message) {
+		AlertDialog.Builder usrCreatedDialogMessage  = new AlertDialog.Builder(this);
+        usrCreatedDialogMessage.setMessage(message);
+        usrCreatedDialogMessage.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                //dismiss the dialog
+            }
+        });
+        usrCreatedDialogMessage.create().show();
+	}
+
+	@Override
+	public void onCarStart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onUpdateRides(String msg) {
+		// TODO Auto-generated method stub
+		ShowDialog(msg);
+	}
+
+	@Override
+	public void onCarResponse(String msg) {
+		// TODO Auto-generated method stub
+		ShowDialog(msg);
 	}
 }

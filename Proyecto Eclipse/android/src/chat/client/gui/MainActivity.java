@@ -69,7 +69,7 @@ import android.widget.TextView;
  * @author 
  */
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements PassangerResponse, CarResponse {
 	private Logger logger = Logger.getJADELogger(this.getClass().getName());
 
 	private MicroRuntimeServiceBinder microRuntimeServiceBinder;
@@ -78,7 +78,7 @@ public class MainActivity extends Activity {
 	static final int CHAT_REQUEST = 0;
 	static final int SETTINGS_REQUEST = 1;
 
-	private MyReceiver myReceiver;
+	//private MyReceiver myReceiver;
 	private MyHandler myHandler;
 	
 	private RadioButton passenger;
@@ -91,7 +91,7 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		myReceiver = new MyReceiver();
+		/*myReceiver = new MyReceiver();
 
 		IntentFilter killFilter = new IntentFilter();
 		killFilter.addAction("jade.demo.carpool.SHOW_DRIVER");
@@ -100,7 +100,7 @@ public class MainActivity extends Activity {
 		IntentFilter showChatFilter = new IntentFilter();
 		showChatFilter.addAction("jade.demo.chat.SHOW_CHAT");
 		registerReceiver(myReceiver, showChatFilter);
-
+		*/
 		myHandler = new MyHandler();
 
 		setContentView(R.layout.main);
@@ -127,7 +127,7 @@ public class MainActivity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 
-		unregisterReceiver(myReceiver);
+		//unregisterReceiver(myReceiver);
 
 		logger.log(Level.INFO, "Destroy activity!");
 	}
@@ -238,7 +238,7 @@ public class MainActivity extends Activity {
 		alert.show();
 	}
 
-	private class MyReceiver extends BroadcastReceiver {
+	/*private class MyReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -260,7 +260,7 @@ public class MainActivity extends Activity {
 						.startActivityForResult(showChat, CHAT_REQUEST);
 			}
 		}
-	}
+	}*/
 
 	private class MyHandler extends Handler {
 		@Override
@@ -363,7 +363,7 @@ public class MainActivity extends Activity {
 			final RuntimeCallback<AgentController> agentStartupCallback) {
 		microRuntimeServiceBinder.startAgent(nickname,
 				PassengerAgent.class.getName(),
-				new Object[] { getApplicationContext() },
+				new Object[] { this },
 				new RuntimeCallback<Void>() {
 					@Override
 					public void onSuccess(Void thisIsNull) {
@@ -429,7 +429,7 @@ public class MainActivity extends Activity {
 	protected void onPause(){
 		super.onPause();
 
-		unregisterReceiver(myReceiver);
+		//unregisterReceiver(myReceiver);
 
 	}
 	
@@ -437,12 +437,52 @@ public class MainActivity extends Activity {
 	protected void onResume(){
 		super.onResume();
 		
-		IntentFilter killFilter = new IntentFilter();
+		/*IntentFilter killFilter = new IntentFilter();
 		killFilter.addAction("jade.demo.carpool.SHOW_DRIVER");
 		registerReceiver(myReceiver, killFilter);
 
 		IntentFilter showChatFilter = new IntentFilter();
 		showChatFilter.addAction("jade.demo.chat.SHOW_CHAT");
-		registerReceiver(myReceiver, showChatFilter);
+		registerReceiver(myReceiver, showChatFilter);*/
+	}
+
+	@Override
+	public void onCarStart() {
+		// TODO Auto-generated method stub
+		
+		logger.log(Level.INFO, "agent starting. Begin Car Activity");
+		Intent showCar = new Intent(MainActivity.this,
+				DriverActivity.class);
+		showCar.putExtra("nickname", nickname);
+		logger.log(Level.INFO, "About to start activity");
+		MainActivity.this
+				.startActivityForResult(showCar, CHAT_REQUEST);
+	}
+
+	@Override
+	public void onUpdateRides(String msg) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onCarResponse(String msg) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onPassengerStart() {
+		// TODO Auto-generated method stub
+		logger.log(Level.INFO, "agent starting. Begin Passenger Activity");
+		Intent showPassenger = new Intent(MainActivity.this,
+				ChatActivity.class);
+		showPassenger.putExtra("nickname", nickname);
+		MainActivity.this
+				.startActivityForResult(showPassenger, CHAT_REQUEST);
+		
+	}
+
+	@Override
+	public void onPassengerResponse(String msg) {
+		// TODO Auto-generated method stub
 	}
 }

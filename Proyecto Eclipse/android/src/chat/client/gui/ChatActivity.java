@@ -32,7 +32,7 @@ import jade.wrapper.O2AException;
 import jade.wrapper.StaleProxyException;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
+//import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -56,12 +56,12 @@ import chat.client.agent.PassengerInterface;
  * @author Michele Izzo - Telecomitalia
  */
 
-public class ChatActivity extends Activity {
+public class ChatActivity extends Activity implements PassangerResponse {
 	private Logger logger = Logger.getJADELogger(this.getClass().getName());
 
 	static final int PARTICIPANTS_REQUEST = 0;
 
-	private MyReceiver myReceiver;
+	//private MyReceiver myReceiver;
 
 	private String nickname;
 	private PassengerInterface passengerInterface;
@@ -84,16 +84,7 @@ public class ChatActivity extends Activity {
 			showAlertDialog(getString(R.string.msg_controller_exc), true);
 		}
 
-		myReceiver = new MyReceiver();
-
-		IntentFilter refreshChatFilter = new IntentFilter();
-		refreshChatFilter.addAction("jade.demo.chat.REFRESH_CHAT");
-		registerReceiver(myReceiver, refreshChatFilter);
-
-		IntentFilter clearChatFilter = new IntentFilter();
-		clearChatFilter.addAction("jade.demo.chat.CLEAR_CHAT");
-		registerReceiver(myReceiver, clearChatFilter);
-
+		passengerInterface.setDelegate(this);
 		setContentView(R.layout.chat);
 
 		Button button = (Button) findViewById(R.id.button_send);
@@ -103,9 +94,6 @@ public class ChatActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
-		unregisterReceiver(myReceiver);
-
 		logger.log(Level.INFO, "Destroy activity!");
 	}
 
@@ -156,14 +144,14 @@ public class ChatActivity extends Activity {
 		}
 	}
 
-	private class MyReceiver extends BroadcastReceiver {
+	/*private class MyReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			logger.log(Level.INFO, "Received intent " + action);
 		}
-	}
+	}*/
 
 
 	@Override
@@ -191,5 +179,28 @@ public class ChatActivity extends Activity {
 						});
 		AlertDialog alert = builder.create();
 		alert.show();		
+	}
+	
+	public void ShowDialog(String message) {
+		AlertDialog.Builder usrCreatedDialogMessage  = new AlertDialog.Builder(this);
+        usrCreatedDialogMessage.setMessage(message);
+        usrCreatedDialogMessage.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                //dismiss the dialog
+            }
+        });
+        usrCreatedDialogMessage.create().show();
+	}
+
+	@Override
+	public void onPassengerStart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPassengerResponse(String msg) {
+		// TODO Auto-generated method stub
+		ShowDialog(msg);
 	}
 }
