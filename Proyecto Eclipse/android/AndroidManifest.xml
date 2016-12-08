@@ -18,7 +18,7 @@
 		</activity>
 		
 		<activity android:name="carpooling.gui.SettingsActivity" android:label="@string/app_title_settings"></activity>
-		<activity android:name="carpooling.gui.ChatActivity" android:label="@string/app_title_chat"></activity>
+		<activity android:name="carpooling.gui.PassengerActivity" android:label="@string/app_title_chat"></activity>
 		<activity android:name="carpooling.gui.ParticipantsActivity" android:label="@string/app_title_participants"></activity>
 		<activity android:name = "carpooling.gui.DriverActivity" android:label="@string/app_title_driver"></activity>
 	</application>

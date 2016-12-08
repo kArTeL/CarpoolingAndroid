@@ -455,7 +455,7 @@ public class MainActivity extends Activity implements PassangerResponse, CarResp
 		// TODO Auto-generated method stub
 		logger.log(Level.INFO, "agent starting. Begin Passenger Activity");
 		Intent showPassenger = new Intent(MainActivity.this,
-				ChatActivity.class);
+				PassengerActivity.class);
 		showPassenger.putExtra("nickname", nickname);
 		MainActivity.this
 				.startActivityForResult(showPassenger, CHAT_REQUEST);

@@ -25,6 +25,7 @@ package carpooling.gui;
 
 import java.util.logging.Level;
 
+import Util.AlertUtil;
 import jade.core.MicroRuntime;
 import jade.util.Logger;
 import jade.wrapper.ControllerException;
@@ -54,7 +55,7 @@ import carpooling.gui.R;
 import carpooling.gui.CarResponse;
 
 
-public class ChatActivity extends Activity implements PassangerResponse {
+public class PassengerActivity extends Activity implements PassangerResponse {
 	private Logger logger = Logger.getJADELogger(this.getClass().getName());
 
 	static final int PARTICIPANTS_REQUEST = 0;
@@ -77,9 +78,10 @@ public class ChatActivity extends Activity implements PassangerResponse {
 			passengerInterface = MicroRuntime.getAgent(nickname)
 					.getO2AInterface(PassengerInterface.class);
 		} catch (StaleProxyException e) {
-			showAlertDialog(getString(R.string.msg_interface_exc), true);
+			AlertUtil.showDialog(getString(R.string.msg_controller_exc), this);
 		} catch (ControllerException e) {
-			showAlertDialog(getString(R.string.msg_controller_exc), true);
+			
+			AlertUtil.showDialog(getString(R.string.msg_controller_exc), this);
 		}
 
 		passengerInterface.setDelegate(this);
@@ -110,7 +112,7 @@ public class ChatActivity extends Activity implements PassangerResponse {
 					 }
 					passengerInterface.askForRide(origin,destiny,arrival);
 				} catch (Exception e) {
-					showAlertDialog(e.getMessage(), false);
+					AlertUtil.showDialog(e.getMessage(),PassengerActivity.this);
 				}
 			}
 
@@ -162,34 +164,6 @@ public class ChatActivity extends Activity implements PassangerResponse {
 		super.onRestoreInstanceState(savedInstanceState);
 	}
 
-	private void showAlertDialog(String message, final boolean fatal) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(
-				ChatActivity.this);
-		builder.setMessage(message)
-				.setCancelable(false)
-				.setPositiveButton("Ok",
-						new DialogInterface.OnClickListener() {
-							public void onClick(
-									DialogInterface dialog, int id) {
-								dialog.cancel();
-								if(fatal) finish();
-							}
-						});
-		AlertDialog alert = builder.create();
-		alert.show();		
-	}
-	
-	public void ShowDialog(String message) {
-		AlertDialog.Builder usrCreatedDialogMessage  = new AlertDialog.Builder(this);
-        usrCreatedDialogMessage.setMessage(message);
-        usrCreatedDialogMessage.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                //dismiss the dialog
-            }
-        });
-        usrCreatedDialogMessage.create().show();
-	}
-
 	@Override
 	public void onPassengerStart() {
 		// TODO Auto-generated method stub
@@ -199,6 +173,6 @@ public class ChatActivity extends Activity implements PassangerResponse {
 	@Override
 	public void onPassengerResponse(String msg) {
 		// TODO Auto-generated method stub
-		ShowDialog(msg);
+		AlertUtil.showDialog(msg, this);
 	}
 }
