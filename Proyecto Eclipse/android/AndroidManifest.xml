@@ -10,15 +10,16 @@
 
 		<service android:name="jade.android.MicroRuntimeService" />
 
-		<activity android:name=".MainActivity" android:label="@string/app_title_main">
+		<activity android:name="carpooling.gui.MainActivity" android:label="@string/app_title_main">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
 		
-		<activity android:name=".SettingsActivity" android:label="@string/app_title_settings"></activity>
-		<activity android:name=".ChatActivity" android:label="@string/app_title_chat"></activity>
-		<activity android:name=".ParticipantsActivity" android:label="@string/app_title_participants"></activity>
+		<activity android:name="carpooling.gui.SettingsActivity" android:label="@string/app_title_settings"></activity>
+		<activity android:name="carpooling.gui.ChatActivity" android:label="@string/app_title_chat"></activity>
+		<activity android:name="carpooling.gui.ParticipantsActivity" android:label="@string/app_title_participants"></activity>
+		<activity android:name = "carpooling.gui.DriverActivity" android:label="@string/app_title_driver"></activity>
 	</application>
 </manifest>

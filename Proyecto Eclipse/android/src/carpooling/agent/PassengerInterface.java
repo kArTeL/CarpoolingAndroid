@@ -1,4 +1,4 @@
-package chat.client.agent;
+package carpooling.agent;
 
 import chat.client.gui.PassangerResponse;
 

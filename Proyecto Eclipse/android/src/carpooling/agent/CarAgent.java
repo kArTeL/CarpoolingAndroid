@@ -1,5 +1,5 @@
 
-package chat.client.agent;
+package carpooling.agent;
 
 import jade.core.Agent;
 import jade.core.behaviours.*;
@@ -52,6 +52,8 @@ public class CarAgent extends Agent implements CarInterface {
             catch (FIPAException fe) {
                     fe.printStackTrace();
             }
+            
+            
 
             // Add the behaviour serving queries from passenger agents
             addBehaviour(new OfferRequestsServer());
