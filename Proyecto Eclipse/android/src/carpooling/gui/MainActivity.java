@@ -379,7 +379,7 @@ public class MainActivity extends Activity implements PassangerResponse, CarResp
 
 	private void startCarAgent(final String nickname, final RuntimeCallback<AgentController> agentStartupCallback) {
 		microRuntimeServiceBinder.startAgent(nickname, CarAgent.class.getName(),
-				new Object[] { getApplicationContext() }, new RuntimeCallback<Void>() {
+				new Object[] { this }, new RuntimeCallback<Void>() {
 					@Override
 					public void onSuccess(Void thisIsNull) {
 						if (passenger.isChecked()) {

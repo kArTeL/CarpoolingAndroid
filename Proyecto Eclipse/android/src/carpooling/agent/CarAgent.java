@@ -22,7 +22,7 @@ import android.content.Intent;
 public class CarAgent extends Agent implements CarInterface {
 	private Logger logger = Logger.getJADELogger(this.getClass().getName());
 	// The rides a car agent is offering
-	private Map rides;
+	private Map<String, Ride> rides;
 	// The GUI by means of which the user can add rides
 	
 	private CarResponse _delegate;
@@ -61,7 +61,8 @@ public class CarAgent extends Agent implements CarInterface {
 
             // Add the behaviour serving seat resevations from passenger agents
             addBehaviour(new PurchaseOrdersServer());
-            
+        	// Activate the GUI
+    		registerO2AInterface(CarInterface.class, this);
             _delegate.onCarStart();
 	}
 
