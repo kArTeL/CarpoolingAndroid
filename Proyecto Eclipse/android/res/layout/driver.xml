@@ -3,6 +3,8 @@
     android:orientation="vertical" android:layout_height="fill_parent"
     android:layout_width="fill_parent">
 
+    
+    
     <TextView android:id="@+id/originTextView"
             android:paddingBottom="8dip"
             android:layout_width="wrap_content"
@@ -108,6 +110,32 @@
         android:layout_alignRight="@+id/freeSeatsTextView"
         android:layout_alignEnd="@+id/freeSeatsTextView">
     </EditText>
+    
+      <TextView
+        android:id="@+id/priceTextView"
+        android:paddingBottom="8dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Precio"
+        android:layout_below="@+id/editArrival"
+        android:layout_alignBaseline="@+id/freeSeatsTextView"
+        android:layout_toRightOf="@+id/freeSeatsTextView"
+        android:layout_marginLeft="50dp"
+        />
+          <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editPrice"
+        android:inputType="number"
+        android:hint="1000"
+        android:layout_below="@+id/priceTextView"
+        android:layout_alignBaseline="@+id/editFreeSeats"
+        android:layout_toRightOf="@+id/freeSeatsTextView"
+        android:layout_marginLeft="50dp"
+        android:layout_alignRight="@+id/priceTextView"
+        android:layout_alignEnd="@+id/priceTextView" />
+
+    
 
     <Button
         android:text="@string/button_add_ride"

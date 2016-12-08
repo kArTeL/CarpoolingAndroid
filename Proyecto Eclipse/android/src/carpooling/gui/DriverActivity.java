@@ -2,6 +2,7 @@ package carpooling.gui;
 
 import java.util.logging.Level;
 
+import Util.AlertUtil;
 import jade.core.MicroRuntime;
 import jade.util.Logger;
 import jade.wrapper.AgentController;
@@ -43,10 +44,20 @@ public class DriverActivity extends Activity implements CarResponse {
 
 	static final int PARTICIPANTS_REQUEST = 0;
 
-
+    
 	private String nickname;
 	private CarInterface carInterface;
 
+	EditText destinyEditText;
+	EditText originEditText;
+	EditText departureTimeEditText;
+	EditText arrivalTimeEditText;
+	EditText priceEditText;
+	EditText freeSeatsEditText;
+	
+	//String message = destinyField.getText().toString();
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,19 +77,30 @@ public class DriverActivity extends Activity implements CarResponse {
 				
 			}
 		} catch (StaleProxyException e) {
-			showAlertDialog(getString(R.string.msg_interface_exc), true);
+			AlertUtil.showDialog(getString(R.string.msg_interface_exc),this);
+			//showAlertDialog(getString(R.string.msg_interface_exc), true);
 		} catch (ControllerException e) {
-			showAlertDialog(getString(R.string.msg_controller_exc), true);
+			AlertUtil.showDialog(getString(R.string.msg_interface_exc),this);
+			//showAlertDialog(getString(R.string.msg_controller_exc), true);
 		}
 
 		carInterface.setDelegate(this);
 
 		setContentView(R.layout.driver);
-
+		this.initUI();
 		Button button = (Button) findViewById(R.id.button_send);
 		button.setOnClickListener(buttonSendListener);
 	}
 
+	private void initUI()
+	{
+		destinyEditText =  (EditText) findViewById(R.id.editDestiny);
+		originEditText =  (EditText) findViewById(R.id.editOrigin);
+		departureTimeEditText =  (EditText) findViewById(R.id.editDeparture);
+		arrivalTimeEditText =  (EditText) findViewById(R.id.editArrival);
+		priceEditText =  (EditText) findViewById(R.id.editPrice);
+		freeSeatsEditText = (EditText) findViewById(R.id.editFreeSeats);
+	}
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -87,13 +109,18 @@ public class DriverActivity extends Activity implements CarResponse {
 
 	private OnClickListener buttonSendListener = new OnClickListener() {
 		public void onClick(View v) {
-			EditText destinyField =  (EditText) findViewById(R.id.editDestiny);
-			String message = destinyField.getText().toString();
-			if (message != null && !message.equals("")) {
+			if (DriverActivity.this.validateData() == true)
+			{
+				
 				try {
-					carInterface.addRide("UCR","Coronado","20:00","21:00",2, 1500);
+					carInterface.addRide(DriverActivity.this.originEditText.getText().toString(),
+							DriverActivity.this.destinyEditText.getText().toString(),
+							DriverActivity.this.departureTimeEditText.getText().toString(),
+							DriverActivity.this.arrivalTimeEditText.getText().toString(),
+							Integer.parseInt(DriverActivity.this.freeSeatsEditText.getText().toString()), 
+							Integer.parseInt(DriverActivity.this.priceEditText.getText().toString()));
 				} catch (O2AException e) {
-					showAlertDialog(e.getMessage(), false);
+					AlertUtil.showDialog(e.getMessage(), DriverActivity.this);
 				}
 			}
 			
@@ -131,7 +158,7 @@ public class DriverActivity extends Activity implements CarResponse {
 		}
 	}
 
-
+	
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
@@ -142,33 +169,7 @@ public class DriverActivity extends Activity implements CarResponse {
 		super.onRestoreInstanceState(savedInstanceState);
 	}
 
-	private void showAlertDialog(String message, final boolean fatal) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(
-				DriverActivity.this);
-		builder.setMessage(message)
-				.setCancelable(false)
-				.setPositiveButton("Ok",
-						new DialogInterface.OnClickListener() {
-							public void onClick(
-									DialogInterface dialog, int id) {
-								dialog.cancel();
-								if(fatal) finish();
-							}
-						});
-		AlertDialog alert = builder.create();
-		alert.show();		
-	}
-	
-	public void ShowDialog(String message) {
-		AlertDialog.Builder usrCreatedDialogMessage  = new AlertDialog.Builder(this);
-        usrCreatedDialogMessage.setMessage(message);
-        usrCreatedDialogMessage.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                //dismiss the dialog
-            }
-        });
-        usrCreatedDialogMessage.create().show();
-	}
+
 
 	@Override
 	public void onCarStart() {
@@ -179,12 +180,49 @@ public class DriverActivity extends Activity implements CarResponse {
 	@Override
 	public void onUpdateRides(String msg) {
 		// TODO Auto-generated method stub
-		ShowDialog(msg);
+		AlertUtil.showDialog(msg,this);
 	}
 
 	@Override
 	public void onCarResponse(String msg) {
 		// TODO Auto-generated method stub
-		ShowDialog(msg);
+		AlertUtil.showDialog(msg,this);
 	}
+	
+	public boolean validateData()
+	{
+		boolean returnValue = true;
+		if (this.destinyEditText.getText().toString().isEmpty())
+		{
+			AlertUtil.showDialog("Por favor ingrese el lugar de destino",this);
+			returnValue = false;
+		}
+		else if (this.originEditText.getText().toString().isEmpty())
+		{
+			AlertUtil.showDialog("Por favor ingrese el lugar de origen",this);
+			returnValue = false;
+		}
+		else if (this.departureTimeEditText.getText().toString().isEmpty())
+		{
+			AlertUtil.showDialog("Por favor ingrese la hora de partida",this);
+			returnValue = false;
+		}
+		else if (this.arrivalTimeEditText.getText().toString().isEmpty())
+		{
+			AlertUtil.showDialog("Por favor ingrese la hora de llegada",this);
+			returnValue = false;
+		}
+		else if (this.priceEditText.getText().toString().isEmpty())
+		{
+			AlertUtil.showDialog("Por favor ingrese el precio",this);
+			returnValue = false;
+		}
+		else if (this.freeSeatsEditText.getText().toString().isEmpty())
+		{
+			AlertUtil.showDialog("Por favor ingrese los asientos disponibles",this);
+			returnValue = false;
+		}
+		return returnValue;
+	}
+	
 }
