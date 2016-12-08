@@ -1,6 +1,6 @@
 package carpooling.agent;
 
-import chat.client.gui.CarResponse;
+import carpooling.gui.CarResponse;
 
 public interface CarInterface {
 		public void addRide(final String origin, final String destiny, final String departureTime ,

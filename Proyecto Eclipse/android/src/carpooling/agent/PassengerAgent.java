@@ -4,8 +4,8 @@ package carpooling.agent;
 
 import java.util.logging.Level;
 
-import chat.client.gui.CarResponse;
-import chat.client.gui.PassangerResponse;
+import carpooling.gui.CarResponse;
+import carpooling.gui.PassangerResponse;
 import android.content.Context;
 import android.content.Intent;
 import jade.core.Agent;

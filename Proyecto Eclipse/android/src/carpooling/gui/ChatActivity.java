@@ -49,7 +49,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import carpooling.agent.ChatClientInterface;
 import carpooling.agent.PassengerInterface;
-import chat.client.gui.R;
+import carpooling.gui.PassangerResponse;
+import carpooling.gui.CarResponse;
 
 /**
  * This activity implement the chat interface.

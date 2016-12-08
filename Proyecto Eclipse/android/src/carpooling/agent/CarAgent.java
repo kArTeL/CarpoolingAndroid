@@ -14,7 +14,8 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import java.util.*;
 import java.util.logging.Level;
 
-import chat.client.gui.CarResponse;
+import carpooling.gui.CarResponse;
+import carpooling.gui.PassangerResponse;
 import android.content.Context;
 import android.content.Intent;
 

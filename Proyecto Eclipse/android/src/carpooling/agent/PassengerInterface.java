@@ -1,6 +1,6 @@
 package carpooling.agent;
 
-import chat.client.gui.PassangerResponse;
+import carpooling.gui.PassangerResponse;
 
 /**
  * This interface implements the logic of the chat client running on the user

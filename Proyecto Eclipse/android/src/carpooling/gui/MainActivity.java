@@ -25,7 +25,6 @@ package carpooling.gui;
 
 import java.util.logging.Level;
 
-import chat.client.gui.R;
 import jade.android.AndroidHelper;
 import jade.android.MicroRuntimeService;
 import jade.android.MicroRuntimeServiceBinder;
@@ -63,6 +62,8 @@ import android.widget.TextView;
 import carpooling.agent.CarAgent;
 import carpooling.agent.ChatClientAgent;
 import carpooling.agent.PassengerAgent;
+import carpooling.gui.PassangerResponse;
+import carpooling.gui.CarResponse;
 
 /**
  * This activity implement the main interface.
