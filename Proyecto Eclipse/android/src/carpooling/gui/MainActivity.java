@@ -63,6 +63,7 @@ import carpooling.agent.CarAgent;
 import carpooling.agent.ChatClientAgent;
 import carpooling.agent.PassengerAgent;
 import carpooling.gui.PassangerResponse;
+import carpooling.gui.R;
 import carpooling.gui.CarResponse;
 
 /**

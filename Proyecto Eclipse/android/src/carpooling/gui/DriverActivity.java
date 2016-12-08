@@ -29,6 +29,7 @@ import carpooling.agent.CarInterface;
 import carpooling.agent.ChatClientInterface;
 import carpooling.agent.PassengerInterface;
 import carpooling.gui.PassangerResponse;
+import carpooling.gui.R;
 import carpooling.gui.CarResponse;
 
 /**

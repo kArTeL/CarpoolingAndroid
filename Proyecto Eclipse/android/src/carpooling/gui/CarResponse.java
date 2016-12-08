@@ -1,4 +1,4 @@
-package chat.client.gui;
+package carpooling.gui;
 
 public interface CarResponse {
 	public void onCarStart();

@@ -31,13 +31,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import chat.client.gui.R;
-
-/**
- * This activity implement the settings interface.
- * 
- * @author Michele Izzo - Telecomitalia
- */
+import carpooling.gui.R;
 
 public class SettingsActivity extends Activity {
 	Properties properties;

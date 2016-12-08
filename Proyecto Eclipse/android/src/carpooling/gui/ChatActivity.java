@@ -50,13 +50,9 @@ import android.widget.TextView;
 import carpooling.agent.ChatClientInterface;
 import carpooling.agent.PassengerInterface;
 import carpooling.gui.PassangerResponse;
+import carpooling.gui.R;
 import carpooling.gui.CarResponse;
 
-/**
- * This activity implement the chat interface.
- * 
- * @author Michele Izzo - Telecomitalia
- */
 
 public class ChatActivity extends Activity implements PassangerResponse {
 	private Logger logger = Logger.getJADELogger(this.getClass().getName());
